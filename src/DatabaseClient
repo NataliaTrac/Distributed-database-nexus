@@ -1,12 +1,23 @@
 import java.net.*;
 import java.io.*;
 
+/**
+ * The DatabaseClient class serves as a client for interacting with a database server.
+ * It enables sending requests to the server and receiving responses.
+ */
+
 public class DatabaseClient {
+    /**
+     * The main method for launching the database client.
+     * Retrieves arguments from the command line for connection configuration and operations to perform.
+     *
+     * @param args Arguments passed from the command line. They include the server address (gateway) and port, as well as the operation to perform on the server.
+     * @throws IOException in case of input/output errors during network communication.
+     */
     public static void main(String[] args) throws IOException {
         String gateway = null;
         int port = 0;
         String command = "";
-
         for (int i = 0; i < args.length; i++) {
             switch (args[i]) {
                 case "-gateway":
@@ -22,12 +33,14 @@ public class DatabaseClient {
             }
         }
 
+
         try (Socket socket = new Socket(gateway, port);
              PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
              BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
 
-            out.println(command);
+            out.println(command); // Wysłanie żądania
             System.out.println("Sent command to server: " + command);
+
 
             String response = in.readLine();
             if (response != null) {
@@ -44,3 +57,4 @@ public class DatabaseClient {
         }
     }
 }
+
