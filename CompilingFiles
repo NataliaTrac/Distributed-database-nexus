@@ -1,0 +1,6 @@
+@echo off
+javac DatabaseNode.java
+javac DatabaseClient.java
+start java DatabaseNode <port> <key> <value> [ -connect <address>:<port> ]
+start java DatabaseClient -gateway <gateway>:<port> -operation <operation>
+pause
