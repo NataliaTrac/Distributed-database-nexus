@@ -1,0 +1,46 @@
+import java.net.*;
+import java.io.*;
+
+public class DatabaseClient {
+    public static void main(String[] args) throws IOException {
+        String gateway = null;
+        int port = 0;
+        String command = "";
+
+        for (int i = 0; i < args.length; i++) {
+            switch (args[i]) {
+                case "-gateway":
+                    String[] gatewayArray = args[++i].split(":");
+                    gateway = gatewayArray[0];
+                    port = Integer.parseInt(gatewayArray[1]);
+                    break;
+                case "-operation":
+                    while (i + 1 < args.length) {
+                        command += args[++i] + " ";
+                    }
+                    break;
+            }
+        }
+
+        try (Socket socket = new Socket(gateway, port);
+             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
+
+            out.println(command);
+            System.out.println("Sent command to server: " + command);
+
+            String response = in.readLine();
+            if (response != null) {
+                System.out.println("Received response from server: " + response);
+            } else {
+                System.out.println("No response from the server");
+            }
+        } catch (UnknownHostException e) {
+            System.err.println("The host could not be found: " + gateway);
+            e.printStackTrace();
+        } catch (IOException e) {
+            System.err.println("I/O error communicating with the server");
+            e.printStackTrace();
+        }
+    }
+}
